@@ -69,14 +69,14 @@ class Views:
         self.reset = reset
         return self.reset
 
-    def entry_scores(self, matchs_list):
+    def entry_scores(self, matchs_list, nb_round_max):
         scores_list = []
         vld = Validation()
-        for i in range(0,4):        
+        print("\nWin : 1, Draw : 0.5, Lose : 0")
+        for i in range(0, nb_round_max):        
             score =[]        
-            print ("Entrer le résultat du match {} : {}".format(i+1, matchs_list[i][0]))
-            print("\nW : 1, D : 0.5, L : 0\n")
-            message = "Score de {} : ".format(matchs_list[i][0][0])
+            print ("\nEntrer le résultat du match {} : {}".format(i+1, matchs_list[i][0]))
+            message = "\nScore de {} : ".format(matchs_list[i][0][0])
             score_joueur1 = vld.verif_score(message)
             score.append(score_joueur1)
 
@@ -91,6 +91,23 @@ class Views:
             score = [score_joueur1, score_joueur2]
             scores_list.append(score)
         return scores_list
+
+    def display_classement(self, updated_classement):
+        i=0
+        for player in updated_classement:
+            i+=1
+            print("{}. {}".format(i, player))
+
+    def display_matchs(self, matchs, round_nb):
+        print("\n-- Matchs Round {} : \n".format(round_nb))
+        i=0
+        for match in matchs:
+            i+=1
+            print("{}. {} vs {} | pts before match : {}".format(i, match[0][0], match[0][1], match[1]))
+
+    def press_to_continue(self):
+        press = input("\nPress any button to go back to main Menu... >>>\n")
+
 
 if __name__ == "__main__":
     views = Views()
