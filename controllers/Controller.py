@@ -16,8 +16,9 @@ class Controller(Model):
     def main_menu(self):
         main_view = Views()
         rnd = Round()
-        user_choice = main_view.display_main_menu()
-        if user_choice == 1:
+        self.all_rounds = []
+        self.user_choice = main_view.display_main_menu()
+        if self.user_choice == 1:
             """
             Create tournament
             """
@@ -33,14 +34,14 @@ class Controller(Model):
             main_view.press_to_continue
             self.main_menu()
 
-        if user_choice == 2:
+        elif self.user_choice == 2:
             print("\nLoad tournament...")
             self.serialized_players = self.load_players()
             self.tn = self.load_tournament()
             main_view.press_to_continue()
             self.main_menu()
 
-        if user_choice == 3:
+        elif self.user_choice == 3:
             """
             Register Player
             """
@@ -53,7 +54,7 @@ class Controller(Model):
             self.add_players_to_tn(self.serialized_players)
             self.main_menu()
 
-        if user_choice == 4:
+        elif self.user_choice == 4:
             """
             Generate matchs
             """
@@ -74,7 +75,7 @@ class Controller(Model):
             main_view.press_to_continue()
             self.main_menu()
 
-        if user_choice == 5:
+        elif self.user_choice == 5:
             """
             Score updating
             """
@@ -85,13 +86,16 @@ class Controller(Model):
                 print("Score updating...\n")
                 self.scores = main_view.entry_scores(self.matchs, self.nb_round_max)
                 self.rounds = rnd.update_rounds(self.matchs, self.scores)
+                self.all_rounds.append(self.rounds)
+                self.add_rounds_to_tn(self.all_rounds)
+                self.save_round(self.rounds)
                 self.updated_classement = rnd.update_classement(self.matchs, self.scores)
                 print("\nClassement à l'issue du round {} : \n".format(self.round_nb))
             main_view.display_classement(self.updated_classement)
             main_view.press_to_continue()
             self.main_menu()
 
-        if user_choice == 6:
+        elif self.user_choice == 6:
             """
             Stats
             """
@@ -124,7 +128,7 @@ class Controller(Model):
                     back = input("Appuyez sur une touche pour revenir au menu principal >>>")
                 self.main_menu()
 
-        elif user_choice == 7:
+        elif self.user_choice == 7:
             """
             Exit
             """
@@ -182,9 +186,14 @@ class Controller(Model):
         tn_table = super().get_db().table("tournament")
         tn_table.update({"players" : serialized_players})
             
-    def add_rounds_to_tn(self, rounds):
+    def save_round(self, rounds):
         round_table = super().get_db().table("rounds")
-        round_table.update({"rounds" : rounds})
+        round_table.insert({"rounds" : rounds})
+
+    def add_rounds_to_tn(self, rounds):
+        tn_table = super().get_db().table("tournament")
+        tn_table.update({"rounds" : rounds})
+
     
     def load_players(self):
         players_table = super().get_db().table("players")
