@@ -10,7 +10,8 @@ from models.Round import Round
 class Controller(Model):
     def __init__(self):
         super().__init__()
-        self.round_nb = 0      
+        self.round_nb = 0
+        self.nb_round_max = 4      
 
     def main_menu(self):
         main_view = Views()
@@ -29,12 +30,14 @@ class Controller(Model):
 
             tn_info = main_view.entry_tn_info()
             self.tn = self.create_tournament(tn_info, reset = True)
+            main_view.press_to_continue
             self.main_menu()
 
         if user_choice == 2:
-            print("Load tournament...\n")
+            print("\nLoad tournament...")
             self.serialized_players = self.load_players()
             self.tn = self.load_tournament()
+            main_view.press_to_continue()
             self.main_menu()
 
         if user_choice == 3:
@@ -54,30 +57,38 @@ class Controller(Model):
             """
             Generate matchs
             """
-            print("Generate matchs...\n")
+            disp = print("\nGenerate matchs...")
             self.round_nb += 1
             if self.round_nb == 1:
+                disp
                 sorted_players = rnd.tri_premier_tour(self.serialized_players)
                 self.matchs = rnd.generer_matchs_premier_tour(sorted_players)
-            elif self.round_nb >= 4:
-                self.matchs = rnd.generate_next_round(self.updated_classement)
-                self.add_rounds_to_tn(self.rounds)
-                print("\n-- FIN DE LA PARTIE --\n\nRetour au Menu Principal...\n")
+            elif self.round_nb > self.nb_round_max:
+                print("\nNombre de rounds atteint ! \n\n-- FIN DE LA PARTIE --\n\nRetour au Menu Principal...\n")
                 self.main_menu()                
             else:
+                disp
                 self.matchs = rnd.generate_next_round(self.updated_classement)
 
-            print("\n-- Matchs Round {} : \n\n".format(self.round_nb), self.matchs,"\n")
+            main_view.display_matchs(self.matchs, self.round_nb)
+            main_view.press_to_continue()
             self.main_menu()
 
         if user_choice == 5:
             """
             Score updating
             """
-            print("Score updating...\n")
-            self.scores = main_view.entry_scores(self.matchs)
-            self.rounds = rnd.update_rounds(self.matchs, self.scores)
-            self.updated_classement = rnd.update_classement(self.matchs, self.scores)
+            if self.round_nb > self.nb_round_max:
+                print("\nNombre de rounds atteint !\nClassement final : \n")
+
+            else:
+                print("Score updating...\n")
+                self.scores = main_view.entry_scores(self.matchs, self.nb_round_max)
+                self.rounds = rnd.update_rounds(self.matchs, self.scores)
+                self.updated_classement = rnd.update_classement(self.matchs, self.scores)
+                print("\nClassement à l'issue du round {} : \n".format(self.round_nb))
+            main_view.display_classement(self.updated_classement)
+            main_view.press_to_continue()
             self.main_menu()
 
         if user_choice == 6:
@@ -94,13 +105,12 @@ class Controller(Model):
                     tn_table = super().get_db().table("tournament")
                     to_find = input("Nom du tournoi recherché : ")
                     rsc = tn_table.search(super().get_info().name == to_find) # Afficher les infos du JSON existant
-                    print("\n", rsc, "\n")
-                    back = input("Appuyez sur une touche pour revenir au menu principal >>>\n")
-                    # self.main_menu()
+                    print("\n", rsc, "\n")                    
                 except AttributeError:
-                    print("Aucun tournoi enregistré..\n\n")
-                    back = input("Appuyez sur une touche pour revenir au menu principal >>>")
+                    print("\nAucun tournoi enregistré..\n\n")
+                main_view.press_to_continue()
                 self.main_menu()
+
             elif info_choice == 2:
                 try:
                     print("\n-- Players info --\n")
