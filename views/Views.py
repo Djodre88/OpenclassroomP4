@@ -19,9 +19,9 @@ class Views:
             user_choice = input("Enter your choice : ")
 
         user_choice = int(user_choice)
-        self.user_choice = user_choice
+        # self.user_choice = user_choice
 
-        return self.user_choice
+        return user_choice
 
     def entry_tn_info(self):
         tn_info = {}
