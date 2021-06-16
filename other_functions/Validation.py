@@ -68,15 +68,17 @@ class Validation:
         valid = False
         while not valid:
             entry = input(message)
-            try:
+            if entry in ["0", "1"]:
+                entry = int(entry)
+                valid = True
+                return entry                                            
+            elif entry == "0.5":
                 entry = float(entry)
-                if entry in [0, 0.5, 1]:
-                    if entry == (1 or 0):
-                        return round(entry, 0)
-                    else:
-                        valid = True
-                        return entry                                            
-                else:
-                    print("Win : 1, Draw : 0.5, Lose : 0")
-            except ValueError:
-                print("Veuillez entrer un score")
+                valid = True
+                return entry
+            else:
+                try:
+                    entry = float(entry)
+                    print("\nRappel :\nWin : 1, Draw : 0.5, Lose : 0")
+                except ValueError:
+                    print("\nVeuillez entrer un score valide")
