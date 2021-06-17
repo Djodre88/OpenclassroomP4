@@ -4,7 +4,7 @@ from other_functions.Validation import Validation
 class Views:
     def __init__(self):
         pass
-        
+
     def display_main_menu(self):
         user_choice = -1
         while (user_choice) not in ['1', '2', '3', '4', '5', '6', '7']:
@@ -33,12 +33,12 @@ class Views:
 
         return tn_info
 
-    def entry_player_info(self):       
+    def entry_player_info(self):
         name = input("Enter Player NAME : ")
         firstname = input("Enter Player firstname : ")
         age = input("Enter Player age : ")
         sex = input("Enter Player sex : ")
-        elo  = input("Enter Player ELO : ")
+        elo = input("Enter Player ELO : ")
 
         return name, firstname, age, sex, elo
 
@@ -73,9 +73,9 @@ class Views:
         scores_list = []
         vld = Validation()
         print("\nWin : 1, Draw : 0.5, Lose : 0")
-        for i in range(0, nb_round_max):        
-            score =[]        
-            print ("\nEntrer le résultat du match {} : {}".format(i+1, matchs_list[i][0]))
+        for i in range(0, nb_round_max):
+            score = []
+            print("\nEntrer le résultat du match {} : {}".format(i+1, matchs_list[i][0]))
             message = "\nScore de {} : ".format(matchs_list[i][0][0])
             score_joueur1 = vld.verif_score(message)
             score.append(score_joueur1)
@@ -87,26 +87,26 @@ class Views:
             else:
                 score_joueur2 = 1
 
-            score.append(score_joueur2)        
+            score.append(score_joueur2)
             score = [score_joueur1, score_joueur2]
             scores_list.append(score)
         return scores_list
 
     def display_classement(self, updated_classement):
-        i=0
+        i = 0
         for player in updated_classement:
-            i+=1
+            i += 1
             print("{}. {}".format(i, player))
 
     def display_matchs(self, matchs, round_nb):
         print("\n-- Matchs Round {} : \n".format(round_nb))
-        i=0
+        i = 0
         for match in matchs:
-            i+=1
+            i += 1
             print("{}. {} vs {} | pts before match : {}".format(i, match[0][0], match[0][1], match[1]))
 
     def press_to_continue(self):
-        press = input("\nPress any button to go back to main Menu... >>>\n")
+        input("\nPress any button to go back to main Menu... >>>\n")
 
 
 if __name__ == "__main__":
