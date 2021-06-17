@@ -43,7 +43,7 @@ class Validation:
                 if 1 <= entry <= 9:
                     entry = "0" + str(entry)
                     valid = True
-                    return entry                    
+                    return entry
                 elif entry > 9:
                     entry = str(entry)
                     return entry
@@ -71,7 +71,7 @@ class Validation:
             if entry in ["0", "1"]:
                 entry = int(entry)
                 valid = True
-                return entry                                            
+                return entry
             elif entry == "0.5":
                 entry = float(entry)
                 valid = True
