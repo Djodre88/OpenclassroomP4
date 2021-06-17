@@ -1,5 +1,4 @@
 from models.Model import Model
-from typing import DefaultDict
 
 
 class Round(Model):
@@ -21,28 +20,26 @@ class Round(Model):
         """
         liste_paires = []
         paire = []
-        for i in range(0,4):
+        for i in range(0, 4):
             paire.append((une_liste_de_joueurs_triee[i]["name"], une_liste_de_joueurs_triee[i]["firstname"]))
             paire.append((une_liste_de_joueurs_triee[i+4]["name"], une_liste_de_joueurs_triee[i+4]["firstname"]))
             # paire.append(une_liste_de_joueurs_triee[i+4]["Nom"])
             liste_paires.append(paire)
-            paire =[]    
+            paire = []
         """
         On associe un champ resultat à chaque paire
         """
         liste_matchs = []
         # score = [0, 0]
         for lp in liste_paires:
-            match =(lp, [0, 0])
-            liste_matchs.append(match)               
+            match = (lp, [0, 0])
+            liste_matchs.append(match)
         return liste_matchs
 
     def update_rounds(self, matchs, liste_scores):
         rounds = []
-        for i in range (0,4):
+        for i in range(0, 4):
             new_tuple = (matchs[i][0], liste_scores[i])
-            # matchs.pop(i)
-            # matchs.insert(i, new_tuple)      
             rounds.append(new_tuple)
         return rounds
 
@@ -50,29 +47,25 @@ class Round(Model):
         joueurs = []
         points = []
         classement = []
-        ##### Creation d'une liste de liste associant joueur et nombre de points
-        for i in range(0,4):
+        # Creation d'une liste de liste associant joueur et nombre de points
+        for i in range(0, 4):
             liste_matchs[i][1][0] += liste_scores[i][0]
             liste_matchs[i][1][1] += liste_scores[i][1]
 
-            joueurs.append(liste_matchs[i][0][0])   #ajout du joueur1 à la liste pour classement
-            joueurs.append(liste_matchs[i][0][1])   #ajout du joueur2 à la liste pour classement
-            points.append(liste_matchs[i][1][0])    #ajout du score du joueur1 à la liste pour classement
-            points.append(liste_matchs[i][1][1])    #ajout du score du joueur2 à la liste pour classement
-        
-        for i in range(0,8):
-            classement.append([joueurs[i], points[i]])  
+            joueurs.append(liste_matchs[i][0][0])   # ajout du joueur1 à la liste pour classement
+            joueurs.append(liste_matchs[i][0][1])   # ajout du joueur2 à la liste pour classement
+            points.append(liste_matchs[i][1][0])    # ajout du score du joueur1 à la liste pour classement
+            points.append(liste_matchs[i][1][1])    # ajout du score du joueur2 à la liste pour classement
 
-        # print(classement,"\n")        
-        sorted_classement = sorted(classement, key=lambda s: s[1], reverse=True)    
-        # print(sorted_classement,"\n")
+        for i in range(0, 8):
+            classement.append([joueurs[i], points[i]])
+
+        sorted_classement = sorted(classement, key=lambda s: s[1], reverse=True)
         return sorted_classement
 
-    def generate_next_round (self, updated_classement):
+    def generate_next_round(self, updated_classement):
         liste_matchs = []
-        for i in range (0,4):
-            match = ([updated_classement[2*i][0],updated_classement[2*i+1][0]],[updated_classement[2*i][1],updated_classement[2*i+1][1]])
+        for i in range(0, 4):
+            match = ([updated_classement[2*i][0], updated_classement[2*i+1][0]], [updated_classement[2*i][1], updated_classement[2*i+1][1]])
             liste_matchs.append(match)
-        # print(liste_matchs)    
         return liste_matchs
-

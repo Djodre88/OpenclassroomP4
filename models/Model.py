@@ -12,6 +12,7 @@ class Model:
     def get_info(self):
         return self.Info
 
+
 if __name__ == "__main__":
     md = Model()
     md.get_db()

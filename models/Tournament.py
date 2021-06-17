@@ -15,7 +15,6 @@ class Tournament(Model):
         self.round = []
         self.table_name = "tournament"
 
-
     def save_tn(self, reset=True):
         tn_table = super().get_db().table(self.table_name)
         if reset:
@@ -24,13 +23,9 @@ class Tournament(Model):
         del to_ser["db"]
         del to_ser["Info"]
         tn_table.insert(to_ser)
-        
+
         return tn_table
 
-
-    # def save_pl(self, players_list):
-        # tn_table = super().get_db().table("tournament")
-        # tn_table.update({"players" : players_list})
     def save_pl(self, serialized_players):
         players_table = super().get_db().table("players")
         players_table.truncate()
