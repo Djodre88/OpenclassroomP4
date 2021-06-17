@@ -14,11 +14,19 @@ class Validation:
             entry = input(message)
             try:
                 entry = int(entry)
-                if len(str(entry)) == 8:
+                if len(str(entry)) == 7:
+                    entry = '0'+str(entry)
+                    valid = True
+                elif len(str(entry)) == 8:
                     entry = str(entry)
-                    if 1984 <= int(entry[0:4]) <= 2021:
-                        if 1 <= int(entry[4:6]) <= 12:
-                            if 1 <= int(entry[6:]) <= 31:
+                    valid = True
+                else:
+                    print("Le format DDMMYYYY n'est pas respecté. Veuillez à nouveau saisir la date :")                    
+                if valid == True:
+                    if 1984 <= int(entry[4:]) <= 2021:
+                        if 1 <= int(entry[2:4]) <= 12:
+                            if 1 <= int(entry[0:2]) <= 31:
+                                valid = True
                                 return entry
                             else:
                                 print("Jour incorrect. Veuillez renouveller votre saisie..")
@@ -26,8 +34,6 @@ class Validation:
                             print("Mois incorrect. Veuillez renouveller votre saisie..")
                     else:
                         print("Année incorrecte. Veuillez renouveller votre saisie..")
-                else:
-                    print("Le format AAAAMMJJ n'est pas respecté. Veuillez à nouveau saisir la date :")
             except ValueError:
                 print("Veuillez saisir des nombres uniquement.")
 
