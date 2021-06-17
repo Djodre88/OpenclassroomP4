@@ -3,15 +3,13 @@ from views.Views import Views
 from models.Tournament import Tournament
 from models.Players import Player
 from models.Round import Round
-# from models.Matchs import Matchs
-
 
 
 class Controller(Model):
     def __init__(self):
         super().__init__()
         self.round_nb = 0
-        self.nb_round_max = 4      
+        self.nb_round_max = 4
 
     def main_menu(self):
         main_view = Views()
@@ -30,7 +28,7 @@ class Controller(Model):
             #     reset = False
 
             tn_info = main_view.entry_tn_info()
-            self.tn = self.create_tournament(tn_info, reset = True)
+            self.tn = self.create_tournament(tn_info, reset=True)
             main_view.press_to_continue
             self.main_menu()
 
@@ -66,7 +64,7 @@ class Controller(Model):
                 self.matchs = rnd.generer_matchs_premier_tour(sorted_players)
             elif self.round_nb > self.nb_round_max:
                 print("\nNombre de rounds atteint ! \n\n-- FIN DE LA PARTIE --\n\nRetour au Menu Principal...\n")
-                self.main_menu()                
+                self.main_menu()
             else:
                 disp
                 self.matchs = rnd.generate_next_round(self.updated_classement)
@@ -108,8 +106,8 @@ class Controller(Model):
                     # print(vars(aa)["name"])
                     tn_table = super().get_db().table("tournament")
                     to_find = input("Nom du tournoi recherché : ")
-                    rsc = tn_table.search(super().get_info().name == to_find) # Afficher les infos du JSON existant
-                    print("\n", rsc, "\n")                    
+                    rsc = tn_table.search(super().get_info().name == to_find)   # Afficher les infos du JSON existant
+                    print("\n", rsc, "\n")
                 except AttributeError:
                     print("\nAucun tournoi enregistré..\n\n")
                 main_view.press_to_continue()
@@ -120,12 +118,12 @@ class Controller(Model):
                     print("\n-- Players info --\n")
                     pl_table = super().get_db().table("players")
                     to_find = input("Nom du Joueur recherché : ")
-                    rsc = pl_table.search(super().get_info().name == to_find) # Afficher les infos du JSON existant
+                    rsc = pl_table.search(super().get_info().name == to_find)   # Afficher les infos du JSON existant
                     print("\n", rsc, "\n")
-                    back = input("Appuyez sur une touche pour revenir au menu principal >>>\n")
+                    input("Appuyez sur une touche pour revenir au menu principal >>>\n")
                 except AttributeError:
                     print("Aucun joueur enregistré..\n\n")
-                    back = input("Appuyez sur une touche pour revenir au menu principal >>>")
+                    input("Appuyez sur une touche pour revenir au menu principal >>>")
                 self.main_menu()
 
         elif self.user_choice == 7:
@@ -145,8 +143,8 @@ class Controller(Model):
         tn.save_tn(reset)
         return tn
 
-    def create_player(self):       
-        main_view = Views()     
+    def create_player(self):
+        main_view = Views()
         pl_infos = main_view.entry_player_info()
         name = pl_infos[0]
         firstname = pl_infos[1]
@@ -155,12 +153,12 @@ class Controller(Model):
         elo = pl_infos[4]
         player = Player(name, firstname, age, sex, elo)
         return player
-  
-    def serialize_players(self, nb_pl_max = 8):
+
+    def serialize_players(self, nb_pl_max=8):
         serialized_players = []
-        i=0
-        for i in range (0, nb_pl_max):
-            player = self.create_player()        
+        i = 0
+        for i in range(0, nb_pl_max):
+            player = self.create_player()
             serialized_player = {
                 "name": player.name,
                 "firstname": player.firstname,
@@ -173,28 +171,27 @@ class Controller(Model):
             else:
                 print("\n{} joueurs enregistrés\n".format(i+1))
             serialized_players.append(serialized_player)
-            i+=1
+            i += 1
         return serialized_players
-        
-    def save_players(self, serialized_players):    
+
+    def save_players(self, serialized_players):
         players_table = super().get_db().table("players")
-        players_table.truncate()          #clear the first table
+        players_table.truncate()    # clear the first table
         players_table.insert_multiple(serialized_players)
-        return players_table        
+        return players_table
 
     def add_players_to_tn(self, serialized_players):
         tn_table = super().get_db().table("tournament")
-        tn_table.update({"players" : serialized_players})
-            
+        tn_table.update({"players": serialized_players})
+
     def save_round(self, rounds):
         round_table = super().get_db().table("rounds")
-        round_table.insert({"rounds" : rounds})
+        round_table.insert({"rounds": rounds})
 
     def add_rounds_to_tn(self, rounds):
         tn_table = super().get_db().table("tournament")
-        tn_table.update({"rounds" : rounds})
+        tn_table.update({"rounds": rounds})
 
-    
     def load_players(self):
         players_table = super().get_db().table("players")
         serialized_players = players_table.all()
@@ -204,6 +201,7 @@ class Controller(Model):
         tn_table = super().get_db().table("tournament")
         tn = tn_table.all()
         return tn
+
 
 if __name__ == "__main__":
     ctrl = Controller()
