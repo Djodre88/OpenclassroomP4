@@ -24,9 +24,11 @@ class Views:
         return user_choice
 
     def entry_tn_info(self):
+        vld = Validation()
         tn_info = {}
         tn_info["name"] = input("Tournament name : ")
-        tn_info["date"] = input("Date (format DDMMYYYY) : ")
+        # tn_info["date"] = input("Date (format DDMMYYYY) : ")
+        tn_info["date"] = vld.verif_correct_date("Date (format DDMMYYYY) : ")
         tn_info["place"] = input("Location : ")
         tn_info["time"] = input("Time control [Bullet/Blitz/Coup rapide] : ")
         tn_info["desc"] = input("Description : ")
