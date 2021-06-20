@@ -94,6 +94,33 @@ class Views:
             scores_list.append(score)
         return scores_list
 
+    def display_tn_info(self, tn_table, pl_table):
+        i = 1
+        print("Liste des tournois disponibles : \n")
+        for tn in tn_table:
+            print(". {}".format(tn["name"]))
+        # print("\n")
+        rsc = input("\nTournoi recherhé : ")
+        for tn in tn_table:
+            if rsc in tn["name"]:
+                print("\nNom du tournoi : {}".format(tn["name"]))
+                print("Date : {}".format(tn["date"]))
+                print("Lieu : {}".format(tn["place"]))
+                print("Time control : {}".format(tn["time"]))
+                print("Nombre de tours : {}\n".format(tn["nb_tour"]))
+                ser_players = pl_table.all()
+                ser_players = sorted(ser_players, key=lambda s: s["name"])
+                print("Liste des participants par ordre alphabétique : \n")
+                print("NOM \t\tPrénom \t\tAge \t\tSexe \t\tELO\n--- \t\t------ \t\t--- \t\t---- \t\t---")
+                for ser_pl in ser_players:
+                    if len(ser_pl["name"]) > 6:
+                        print("{} \t{} \t\t{} \t\t{} \t\t{}".format(ser_pl["name"], ser_pl["firstname"], ser_pl["age"], ser_pl["sex"], ser_pl["elo"]))
+                    else:
+                        print("{} \t\t{} \t\t{} \t\t{} \t\t{}".format(ser_pl["name"], ser_pl["firstname"], ser_pl["age"], ser_pl["sex"], ser_pl["elo"]))              
+                
+            else:
+                print("\nTournoi non trouvé...")
+
     def display_classement(self, updated_classement):
         i = 0
         for player in updated_classement:
@@ -108,7 +135,7 @@ class Views:
             print("{}. {} vs {} | pts before match : {}".format(i, match[0][0], match[0][1], match[1]))
 
     def press_to_continue(self):
-        input("\nPress any button to go back to main Menu... >>>\n")
+        input("\nAppuyez sur une touche pour revneir au menu précédent... >>>")
 
 
 if __name__ == "__main__":
