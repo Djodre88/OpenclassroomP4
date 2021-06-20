@@ -77,54 +77,67 @@ class Controller(Model):
             """
             Score updating
             """
-            if self.round_nb > self.nb_round_max:
-                print("\nNombre de rounds atteint !\nClassement final : \n")
+            if self.round_nb == True:
+                if self.round_nb > self.nb_round_max:
+                    print("\nNombre de rounds atteint !\nClassement final : \n")
 
+                else:
+                    print("Score updating...\n")
+                    self.scores = main_view.entry_scores(self.matchs, self.nb_round_max)
+                    self.rounds = rnd.update_rounds(self.matchs, self.scores)
+                    self.all_rounds.append(self.rounds)
+                    self.add_rounds_to_tn(self.all_rounds)
+                    self.save_round(self.rounds)
+                    self.updated_classement = rnd.update_classement(self.matchs, self.scores)
+                    print("\nClassement à l'issue du round {} : \n".format(self.round_nb))
+                main_view.display_classement(self.updated_classement)
             else:
-                print("Score updating...\n")
-                self.scores = main_view.entry_scores(self.matchs, self.nb_round_max)
-                self.rounds = rnd.update_rounds(self.matchs, self.scores)
-                self.all_rounds.append(self.rounds)
-                self.add_rounds_to_tn(self.all_rounds)
-                self.save_round(self.rounds)
-                self.updated_classement = rnd.update_classement(self.matchs, self.scores)
-                print("\nClassement à l'issue du round {} : \n".format(self.round_nb))
-            main_view.display_classement(self.updated_classement)
+                print ("\nAucun match n'a été généré...")
             main_view.press_to_continue()
-            self.main_menu()
+            self.main_menu()    
 
         elif self.user_choice == 6:
             """
             Stats
             """
-            info_choice = input("\n1. Afficher les infos du tournoi\n2. Afficher les infos de joueurs\n\nChoix : ")
-            info_choice = int(info_choice)
-            if info_choice == 1:
+            loop = True
+            while loop == True:
+                info_choice = input("\n1. Afficher les infos du tournoi\n2. Afficher les infos de joueurs\n3. Retour au menu principal\n\nChoix : ")
                 try:
-                    print("\n-- Tournament info --\n")
-                    # aa = self.tn
-                    # print(vars(aa)["name"])
-                    tn_table = super().get_db().table("tournament")
-                    to_find = input("Nom du tournoi recherché : ")
-                    rsc = tn_table.search(super().get_info().name == to_find)   # Afficher les infos du JSON existant
-                    print("\n", rsc, "\n")
-                except AttributeError:
-                    print("\nAucun tournoi enregistré..\n\n")
-                main_view.press_to_continue()
-                self.main_menu()
+                    info_choice = int(info_choice)                
+                    if info_choice == 1:
+                        try:
+                            print("\n-- Tournament info --\n")
+                            tn_table = super().get_db().table("tournament")
+                            pl_table = super().get_db().table("players")
+                            # Afficher la liste des tournois disponibles
+                            # to_find = input("Nom du tournoi recherché : ")
+                            # rsc = tn_table.search(super().get_info().name == to_find)   # Afficher les infos du JSON existant
+                            # print("\n", rsc, "\n")
+                            main_view.display_tn_info(tn_table, pl_table)
+                        except AttributeError:
+                            print("\nAucun tournoi enregistré..\n\n")
+                        main_view.press_to_continue()
 
-            elif info_choice == 2:
-                try:
-                    print("\n-- Players info --\n")
-                    pl_table = super().get_db().table("players")
-                    to_find = input("Nom du Joueur recherché : ")
-                    rsc = pl_table.search(super().get_info().name == to_find)   # Afficher les infos du JSON existant
-                    print("\n", rsc, "\n")
-                    input("Appuyez sur une touche pour revenir au menu principal >>>\n")
-                except AttributeError:
-                    print("Aucun joueur enregistré..\n\n")
-                    input("Appuyez sur une touche pour revenir au menu principal >>>")
-                self.main_menu()
+                    elif info_choice == 2:
+                        try:
+                            print("\n-- Players info --\n")
+                            pl_table = super().get_db().table("players")
+                            to_find = input("Nom du Joueur recherché : ")
+                            rsc = pl_table.search(super().get_info().name == to_find)   # Afficher les infos du JSON existant
+                            print("\n", rsc, "\n")
+                            input("Appuyez sur une touche pour revenir au menu principal >>>\n")
+                        except AttributeError:
+                            print("Aucun joueur enregistré..\n\n")
+                            input("Appuyez sur une touche pour revenir au menu principal >>>")
+                        # self.main_menu()
+                    elif info_choice == 3:
+                        loop = False
+                        self.main_menu()
+                    else:
+                        print("\nValeur incorrecte..")
+                except ValueError:
+                    print("\nVeuillez entrer une valeur...")
 
         elif self.user_choice == 7:
             """
